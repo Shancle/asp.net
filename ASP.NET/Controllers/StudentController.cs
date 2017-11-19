@@ -21,18 +21,30 @@ namespace ASP.NET.Controllers
         }
 
         [HttpPost]
-        public void Create(Student student)
+        public IActionResult Create(Student student)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(student);
+            }
+
             Students.Add(student);
+            return Json(student);
         }
 
         [HttpPost]
-        public void Update(Student student)
+        public IActionResult Update(Student student)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(student);
+            }
+
             var oldStudent = Students.Single(x => x.Id == student.Id);
             oldStudent.Address = student.Address;
             oldStudent.Birthday = student.Birthday;
             oldStudent.Name = student.Name;
+            return Json(student);
         }
 
         [HttpPost]
