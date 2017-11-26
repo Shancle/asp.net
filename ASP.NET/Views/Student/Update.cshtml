@@ -1,0 +1,14 @@
+﻿@model Student
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Edit student info</h2>
+@using (@Html.BeginForm("Update", "Student"))
+{
+    @Html.EditorForModel(@Model)
+
+    <input type="submit">
+}

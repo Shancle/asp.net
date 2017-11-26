@@ -15,9 +15,16 @@ namespace ASP.NET.Controllers
         };
 
         [HttpGet]
-        public List<Student> Get()
+        public ViewResult GetAll()
         {
-            return Students;
+            return View(Students);
+        }
+
+        [HttpGet]
+        public ViewResult Get(int id)
+        {
+            var student = Students.Single(x => x.Id == id);
+            return View(student);
         }
 
         [HttpPost]
@@ -37,14 +44,22 @@ namespace ASP.NET.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(student);
+                return View(student);
             }
 
             var oldStudent = Students.Single(x => x.Id == student.Id);
             oldStudent.Address = student.Address;
             oldStudent.Birthday = student.Birthday;
             oldStudent.Name = student.Name;
-            return Json(student);
+            oldStudent.Class = student.Class;
+            return RedirectToAction("Get", "Student", new { id = student.Id });
+        }
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            var student = Students.Single(x => x.Id == id);
+            return View(student);
         }
 
         [HttpPost]
