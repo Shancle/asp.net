@@ -1,29 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ASP.NET.Models;
+﻿using ASP.NET.Models;
+using ASP.NET.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ASP.NET.Controllers
 {
     public class StudentController : Controller
     {
-        public static List<Student> Students = new List<Student>
+        private readonly IStudentService _studentService;
+
+        public StudentController(IStudentService studentService)
         {
-            new Student{ Id = 1, Name = "John", Address = "address1", Birthday = new DateTime(1999, 1, 2) },
-            new Student{ Id = 2, Name = "Dave", Address = "address2", Birthday = new DateTime(2001, 3, 2) }
-        };
+            _studentService = studentService;
+        }
 
         [HttpGet]
         public ViewResult GetAll()
         {
-            return View(Students);
+            return View(_studentService.GetAll());
         }
 
         [HttpGet]
-        public ViewResult Get(int id)
+        public ViewResult Get(int id, [FromServices]IStudentService _studentService)
         {
-            var student = Students.Single(x => x.Id == id);
+            var student = _studentService.GetById(id);
             return View(student);
         }
 
@@ -35,7 +35,7 @@ namespace ASP.NET.Controllers
                 return BadRequest(student);
             }
 
-            Students.Add(student);
+            HttpContext.RequestServices.GetService<IStudentService>().Add(student);
             return Json(student);
         }
 
@@ -47,7 +47,7 @@ namespace ASP.NET.Controllers
                 return View(student);
             }
 
-            var oldStudent = Students.Single(x => x.Id == student.Id);
+            var oldStudent = _studentService.GetById(student.Id);
             oldStudent.Address = student.Address;
             oldStudent.Birthday = student.Birthday;
             oldStudent.Name = student.Name;
@@ -58,14 +58,14 @@ namespace ASP.NET.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
-            var student = Students.Single(x => x.Id == id);
+            var student = _studentService.GetById(id);
             return View(student);
         }
 
         [HttpPost]
         public void Delete(int id)
         {
-            Students.RemoveAll(x => x.Id == id);
+            ActivatorUtilities.CreateInstance<StudentService>(HttpContext.RequestServices).Delete(id);
         }
     }
 }

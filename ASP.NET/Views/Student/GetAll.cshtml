@@ -1,10 +1,13 @@
-﻿@model IEnumerable<Student>
+﻿@using ASP.NET.Services
+@model IEnumerable<Student>
 
 @{
     ViewBag.Title = "Students";
     Layout = "_Layout";
 }
+@inject IStudentService StudentService
 
+Student count: @StudentService.GetAll().Count()
 <table class="table table-striped">
     <thead>Students</thead>
     <tr>
