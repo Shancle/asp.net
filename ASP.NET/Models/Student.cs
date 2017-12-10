@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ASP.NET.Infrastructure.Attributes;
 
@@ -18,5 +19,7 @@ namespace ASP.NET.Models
 
         [ClassValidation]
         public int? Class { get; set; }
+
+        public virtual ICollection<Exam> Examinations { get; set; }
     }
 }

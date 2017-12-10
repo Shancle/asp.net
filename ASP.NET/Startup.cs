@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ASP.NET.Contexts;
 using ASP.NET.Infrastructure.Middlewares;
 using ASP.NET.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +27,10 @@ namespace ASP.NET
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var optionsBuilder = new DbContextOptionsBuilder();
+            optionsBuilder.UseNpgsql("Server=localhost; Database=aspnet; User Id=postgres; Password=q1w2e3R$;");
+            services.AddScoped(x => optionsBuilder.Options);
+            services.AddTransient<StudentContext>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddMvc();
         }

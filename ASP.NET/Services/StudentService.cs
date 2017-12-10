@@ -1,36 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using ASP.NET.Contexts;
 using ASP.NET.Models;
 
 namespace ASP.NET.Services
 {
     public class StudentService : IStudentService
     {
-        private static List<Student> Students = new List<Student>
+        private readonly StudentContext _studentContext;
+
+        public StudentService(StudentContext studentContext)
         {
-            new Student{ Id = 1, Name = "John", Address = "address1", Birthday = new DateTime(1999, 1, 2) },
-            new Student{ Id = 2, Name = "Dave", Address = "address2", Birthday = new DateTime(2001, 3, 2) }
-        };
+            _studentContext = studentContext;
+        }
 
         public IEnumerable<Student> GetAll()
         {
-            return Students;
+            return _studentContext.Students;
         }
 
         public Student GetById(int id)
         {
-            return Students.First(x => x.Id == id);
+            return _studentContext.Students.First(x => x.Id == id);
         }
 
         public void Add(Student student)
         {
-            Students.Add(student);
+            _studentContext.Students.Add(student);
+            _studentContext.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Students.RemoveAll(x => x.Id == id);
+            var student = _studentContext.Students.First(x => x.Id == id);
+            _studentContext.Students.Remove(student);
+            _studentContext.SaveChanges();
         }
     }
 }
