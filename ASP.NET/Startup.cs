@@ -32,6 +32,7 @@ namespace ASP.NET
             services.AddScoped(x => optionsBuilder.Options);
             services.AddTransient<StudentContext>();
             services.AddScoped<IStudentService, StudentService>();
+            services.Configure<MyInfoOptions>(Configuration.GetSection("MyInfo"));
             services.AddMvc();
         }
 
