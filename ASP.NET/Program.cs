@@ -13,7 +13,7 @@ namespace ASP.NET
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, config) => config.AddJsonFile("myInfo.json", true, true).Build())
+                .ConfigureAppConfiguration((context, config) => config.AddJsonFile("myInfo.json", true, true))
                 .UseStartup<Startup>()
                 .Build();
     }
